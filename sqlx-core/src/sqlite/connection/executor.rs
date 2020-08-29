@@ -72,7 +72,6 @@ impl<'c> Executor<'c> for &'c mut SqliteConnection {
         E: Execute<'q, Self::Database>,
     {
         let sql = query.sql();
-        let mut logger = QueryLogger::new(sql);
         let arguments = query.take_arguments();
         let persistent = query.persistent() && arguments.is_some();
 
@@ -136,8 +135,6 @@ impl<'c> Executor<'c> for &'c mut SqliteConnection {
 
                             let v = Either::Right(row);
                             *last_row_values = Some(weak_values_ref);
-
-                            logger.increment_rows();
 
                             r#yield!(v);
                         }
